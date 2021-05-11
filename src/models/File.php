@@ -18,6 +18,7 @@ use yii\helpers\Url;
  * @property integer $size
  * @property string $type
  * @property string $mime
+ * @property string $class
  */
 class File extends ActiveRecord
 {
@@ -79,4 +80,22 @@ class File extends ActiveRecord
     {
         return $this->getModule()->getFilesDirPath($this->hash) . DIRECTORY_SEPARATOR . $this->hash . '.' . $this->type;
     }
+
+    public function init()
+    {
+        $this->class = static::class;
+        parent::init();
+    }
+
+    public static function instantiate($row)
+    {
+        $className = $row['class'] ?? self::class;
+
+        if (class_exists($className)) {
+            return new $row['class'];
+        } else {
+            throw new Exception("Class doesn't exists: " . $className);
+        }
+    }
+
 }

@@ -111,17 +111,27 @@ class Module extends \yii\base\Module
     /**
      * @param $filePath string
      * @param $owner
+     * @param $class string
+     * @param $deleteOriginal bool
      * @return bool|File
      * @throws Exception
      * @throws \yii\base\InvalidConfigException
      */
-    public function attachFile($filePath, $owner)
+    public function attachFile($filePath, $owner, $class = File::class, $deleteOriginal = true)
     {
         if (empty($owner->id)) {
             throw new Exception('Parent model must have ID when you attaching a file');
         }
         if (!file_exists($filePath)) {
             throw new Exception("File $filePath not exists");
+        }
+
+        if (!($class instanceof File)) {
+            throw new Exception("Attachment must be a File class or its successor");
+        }
+
+        if (!class_exists($class)) {
+            throw new Exception("Class " . $class . " doesn't exists");
         }
 
         $fileHash = md5(microtime(true) . $filePath);
@@ -134,7 +144,7 @@ class Module extends \yii\base\Module
             throw new Exception("Cannot copy file! $filePath  to $newFilePath");
         }
 
-        $file = new File();
+        $file = new $class();
         $file->name = pathinfo($filePath, PATHINFO_FILENAME);
         $file->model = $this->getShortClass($owner);
         $file->itemId = $owner->id;
@@ -142,9 +152,12 @@ class Module extends \yii\base\Module
         $file->size = filesize($filePath);
         $file->type = $fileType;
         $file->mime = FileHelper::getMimeType($filePath);
+        $file->class = $class;
 
         if ($file->save()) {
-            unlink($filePath);
+            if ($deleteOriginal) {
+                unlink($filePath);
+            }
             return $file;
         } else {
             return false;
