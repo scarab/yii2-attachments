@@ -17,6 +17,11 @@
       "email": "alimzhan.abu@yandex.kz",
       "homepage": "http://alimzhan.kz",
       "role": "Developer"
+    },
+    {
+      "name": "Ilya Basalaev aka Scarab",
+      "email": "scarab@scarab.name",
+      "role": "Developer"
     }
   ],
   "require": {

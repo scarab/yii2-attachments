@@ -12,6 +12,7 @@ use nemmo\attachments\events\FileEvent;
 use nemmo\attachments\models\File;
 use nemmo\attachments\ModuleTrait;
 use yii\base\Behavior;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
@@ -141,5 +142,30 @@ class FileBehavior extends Behavior
         }
 
         return $initialPreviewConfig;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws \Exception
+     */
+    public function attachFile(string $path, string $class, bool $deleteOriginal)
+    {
+        $module = $this->getModule();
+        if (!$module) { throw new InvalidConfigException("Module not found"); }
+
+        return $module->attachFile($path, $this->owner, $class, $deleteOriginal);
+
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws \Exception
+     */
+    public function detachFile(int $id)
+    {
+        $module = $this->getModule();
+        if (!$module) { throw new InvalidConfigException("Module not found"); }
+
+        return $module->detachFile($id);
     }
 }

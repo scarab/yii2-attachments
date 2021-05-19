@@ -17,14 +17,14 @@ class m210509_160210_add_classes extends Migration
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
         $this->addColumn($this->getModule()->tableName, 'class', Schema::TYPE_STRING);
-        $this->addColumn($this->getModule()->tableName, 'extraFields', Schema::TYPE_TEXT);
+        $this->addColumn($this->getModule()->tableName, 'customFields', Schema::TYPE_TEXT);
 
         $this->createIndex('file_class', $this->getModule()->tableName, 'class');
     }
 
     public function down()
     {
-        $this->dropColumn($this->getModule()->tableName, 'extraFields');
+        $this->dropColumn($this->getModule()->tableName, 'customFields');
         $this->dropColumn($this->getModule()->tableName, 'class');
     }
 }

@@ -117,7 +117,7 @@ class Module extends \yii\base\Module
      * @throws Exception
      * @throws \yii\base\InvalidConfigException
      */
-    public function attachFile($filePath, $owner, $class = File::class, $deleteOriginal = true)
+    public function attachFile(string $filePath, $owner, string $class = File::class, bool $deleteOriginal = true)
     {
         if (empty($owner->id)) {
             throw new Exception('Parent model must have ID when you attaching a file');
@@ -126,7 +126,7 @@ class Module extends \yii\base\Module
             throw new Exception("File $filePath not exists");
         }
 
-        if (!($class instanceof File)) {
+        if (!is_subclass_of($class, File::class, true)) {
             throw new Exception("Attachment must be a File class or its successor");
         }
 
