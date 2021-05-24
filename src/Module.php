@@ -89,14 +89,23 @@ class Module extends \yii\base\Module
 
     public function getUserDirPath()
     {
-        \Yii::$app->session->open();
+        switch (get_class(\Yii::$app)) {
+            case \yii\web\Application::class:
+                \Yii::$app->session->open();
+                $userDirPath = $this->getTempPath() . DIRECTORY_SEPARATOR . \Yii::$app->session->id;
+                FileHelper::createDirectory($userDirPath);
+                \Yii::$app->session->close();
+                break;
 
-        $userDirPath = $this->getTempPath() . DIRECTORY_SEPARATOR . \Yii::$app->session->id;
-        FileHelper::createDirectory($userDirPath);
-
-        \Yii::$app->session->close();
+            case \yii\console\Application::class:
+                $uniq = getmypid() || random_int(1, 99999);
+                $userDirPath = $this->getTempPath() . DIRECTORY_SEPARATOR . $uniq;
+                FileHelper::createDirectory($userDirPath);
+                break;
+        }
 
         return $userDirPath . DIRECTORY_SEPARATOR;
+
     }
 
     public function getShortClass($obj)
