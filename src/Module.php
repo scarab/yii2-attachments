@@ -135,7 +135,7 @@ class Module extends \yii\base\Module
             throw new Exception("File $filePath not exists");
         }
 
-        if (!is_subclass_of($class, File::class, true)) {
+        if (!is_a($class, File::class, true)) {
             throw new Exception("Attachment must be a File class or its successor");
         }
 

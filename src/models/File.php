@@ -110,7 +110,7 @@ class File extends ActiveRecord
                 }, ARRAY_FILTER_USE_KEY);
             } else { $customFields = []; }
 
-            return new $row['class']($customFields);
+            return new $className($customFields);
         }
 
         throw new \Exception("Class doesn't exists: " . $className);
